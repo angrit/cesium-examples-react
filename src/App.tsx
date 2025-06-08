@@ -2,15 +2,17 @@ import React, {useState} from 'react'
 import Building from './components/Building'
 import Mountain from './components/Mountain'
 import NavWorldTerrain from './components/NavWorldTerrain'
+import DrawOnWorldTerrain from './components/DrawOnWorldTerrain'
 
 function App() {
   const MapExamples = {
     NavWorldTerrain: 0,
-    Building: 1,
-    Mountain: 2,
+    DrawOnWorldTerrain: 1,
+    Building: 2,
+    Mountain: 3,
   }
   const numMapExamples = Object.keys(MapExamples).length;
-  const [selectedComponent, setSelectedComponent] = useState<number>(0);
+  const [selectedComponent, setSelectedComponent] = useState<number>(1);
 
   return (
     <>
@@ -39,6 +41,7 @@ function App() {
         </div>
         <div style={{ flex: 4, width: '100%', height: '100%' }}>
           {selectedComponent === MapExamples.NavWorldTerrain && <NavWorldTerrain />}
+          {selectedComponent === MapExamples.DrawOnWorldTerrain && <DrawOnWorldTerrain />}
           {selectedComponent === MapExamples.Building && <Building />}
           {selectedComponent === MapExamples.Mountain && <Mountain />}
         </div>
