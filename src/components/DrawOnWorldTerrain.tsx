@@ -8,6 +8,7 @@ import {
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 // https://sandcastle.cesium.com/?src=Drawing%20on%20Terrain.html
+// https://cesium.com/learn/cesiumjs/ref-doc/Entity.html
 // https://community.cesium.com/t/an-example-from-sandcastle-doesnt-work/16587/17
 // https://github.com/CesiumGS/cesium/issues/8927
 
@@ -46,20 +47,13 @@ const DrawOnWorldTerrain = () => {
     Pitch: lopburi.Pitch,
     Roll: lopburi.Roll,
   });
-  // https://cesium.com/learn/cesiumjs/ref-doc/Entity.html#position
-  // https://cesium.com/learn/cesiumjs/ref-doc/PositionPropertyArray.html#setValue
+  
+  const [isLoading, setIsLoading] = useState(true);
   const activeShapePointsRef = useRef<Cartesian3[]>([]);
   const floatingPointRef = useRef<PositionProperty>(new ConstantPositionProperty());
-  const activeShapeRef = useRef<Entity>(new Entity);
+  const activeShapeRef = useRef<Entity>(new Entity());
 
-  // Ensure the Cesium Ion access token is set from environment variables
-  // This is necessary for accessing terrain and other Cesium Ion services
-  Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_ACCESS_TOKEN;
-  if (!Ion.defaultAccessToken) {
-    console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
-  }
-
-  const addPointEntity = (viewer: Viewer, worldPosition: Cartesian3) => {
+  const drawPoint = (viewer: Viewer, worldPosition: Cartesian3) => {
     const entity = viewer.entities.add({
       position: worldPosition,
       point: {
@@ -73,14 +67,14 @@ const DrawOnWorldTerrain = () => {
     return entity;
   }
 
-  const addLineEntity = (
+  const drawLine = (
     viewer: Viewer,
-    linePositions: CallbackProperty | Cartesian3[],
+    points: CallbackProperty | Cartesian3[],
     colour?: Color
   ) => {
     const line = viewer.entities.add({
       polyline: {
-        positions: linePositions,
+        positions: points,
         clampToGround: true,
         width: 3,
         material: colour ?? Color.WHITE,
@@ -91,10 +85,20 @@ const DrawOnWorldTerrain = () => {
   };
 
   useEffect(() => {
+    // Ensure the Cesium Ion access token is set from environment variables
+    // This is necessary for accessing terrain and other Cesium Ion services
+    Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_ACCESS_TOKEN;
+    if (!Ion.defaultAccessToken) {
+      console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
+    }
+
     document.title = `${DrawOnWorldTerrain.name} - Lopburi`;
     const viewer = new Viewer('cesiumContainer', {
       terrain: Terrain.fromWorldTerrain(),
     });
+
+    const removeEventListener = viewer.scene.globe.tileLoadProgressEvent
+      .addEventListener(() => setIsLoading(false));
 
     if (viewer) {
       viewer.resize();
@@ -108,131 +112,112 @@ const DrawOnWorldTerrain = () => {
         },
       });
 
-      // // Finish plotting the line
-      // viewer.screenSpaceEventHandler.removeInputAction(
-      //   ScreenSpaceEventType.LEFT_DOUBLE_CLICK
-      // );
+      const updateFloatingPoint = (event: ScreenSpaceEventHandler.MotionEvent) => {
+          if (defined(floatingPointRef.current)) {
+            const ray = viewer.camera.getPickRay(event.endPosition);
+            if(!ray) { // Big Oopsies - Shouldnt ever be here
+              console.error('Failed to get pick ray from camera position.');
+              return;
+            }
+            const newPosition = viewer.scene.globe.pick(ray, viewer.scene);
+            if (defined(newPosition)) {
+              const convertedToPosition = new ConstantPositionProperty(newPosition);
+              floatingPointRef.current = convertedToPosition;
+              if (activeShapePointsRef.current.length > 0) {
+                activeShapePointsRef.current.pop(); // comment this guy and experience true artistry ;)
+                activeShapePointsRef.current.push(newPosition);
+              }
+            }
+          }
+        };
 
-      // // Update next point based on mouse current location
-      // viewer.screenSpaceEventHandler.setInputAction(
-      //   // (event: ScreenSpaceEventHandler.PositionedEvent) => {
-      //   (event: ScreenSpaceEventHandler.MotionEvent) => {
-      //     if (defined(floatingPoint)) {
-      //       const ray = viewer.camera.getPickRay(event.endPosition);
-      //       // Oopsies - Probably never get here, but need to handle undefined
-      //       if(!ray) {
-      //         console.error('Failed to get pick ray from camera position.');
-      //         return; // Absconded into obscruity!!!! Begone into the depths of the void, null and the undefined!
-      //       }
-      //       const newPosition = viewer.scene.globe.pick(ray, viewer.scene);
-      //       if (defined(newPosition)) {
-      //         const convertedToPosition = new ConstantPositionProperty(newPosition);
-      //         setFloatingPoint(convertedToPosition);
-      //         setActiveShapePoints((previous) => {
-      //           previous.pop();
-      //           previous.push(newPosition);
-      //           return previous;
-      //         });
-      //       }
-      //     }
-      //   }, ScreenSpaceEventType.MOUSE_MOVE);
-
-      // Begin/Continue plotting the line
-      viewer.screenSpaceEventHandler.setInputAction(
-        (event: ScreenSpaceEventHandler.PositionedEvent) => {
+      const plotNewLineWithPoint = (event: ScreenSpaceEventHandler.PositionedEvent) => {
           const ray = viewer.camera.getPickRay(event.position);
-          // Oopsies - Probably never get here, but need to handle undefined
-          if(!ray) {
+          if(!ray) { // Big Oopsies - Shouldnt ever be here
             console.error('Failed to get pick ray from camera position.');
-            return; // Absconded into obscruity!!!! Begone into the depths of the void, null and the undefined!
+            return;
           }
           const earthPosition = viewer.scene.globe.pick(ray, viewer.scene);
           if (defined(earthPosition)) {
             // Create new active shape + init
             if (activeShapePointsRef.current.length === 0) {
-              floatingPointRef.current = addPointEntity(viewer, earthPosition).position ?? new ConstantPositionProperty;
+              floatingPointRef.current = drawPoint(viewer, earthPosition).position ?? new ConstantPositionProperty();
               activeShapePointsRef.current.push(earthPosition);
               
               const dynamicPositions = new CallbackProperty(() => activeShapePointsRef.current, false);
-              
-              activeShapeRef.current = addLineEntity(viewer, dynamicPositions);
+              activeShapeRef.current = drawLine(viewer, dynamicPositions);
             }
             activeShapePointsRef.current.push(earthPosition);
-            addPointEntity(viewer, earthPosition);
+            drawPoint(viewer, earthPosition);
           }
-        }, ScreenSpaceEventType.LEFT_CLICK
-      );
+        };
+
+      const removePoints = (viewer: Viewer) =>
+        viewer.entities.values
+          .filter(e => e.point !== undefined)
+          .forEach(e => viewer.entities.remove(e));
 
       const resetShapeEntityAndPoints = () => {
-        // Reset floatingPoint if we were using it... fine
+        // Reset floatingPoint to undefined value
         floatingPointRef.current = new ConstantPositionProperty();
-        // Reset activeShape, to be ready for the next ???
+        // Remove entity for the temp ref for the active shape
+        viewer.entities.remove(activeShapeRef.current);
+        // Reset Entity, used for drawing the activeShape
         activeShapeRef.current = new Entity();
         // Reset Cartesian3[], remove all points
         activeShapePointsRef.current.length = 0;
       };
 
-      const deleteLine = (event: ScreenSpaceEventHandler.PositionedEvent) => {
-        addLineEntity(viewer, new CallbackProperty(() => activeShapePointsRef.current, false));
-        // Remove all Points from viewer
-        viewer.entities.removeAll();
-
-        resetShapeEntityAndPoints();
-      };
-
-      const commitLine = (event: ScreenSpaceEventHandler.PositionedEvent) => {
-        // Create independent var with shape points
-        const committedPoints = [...activeShapePointsRef.current];
-
-        // Create new line with independent var
-        addLineEntity(viewer, committedPoints);
-
-        // Remove only Point Entities from viewer
-        viewer.entities.values
-          .filter(e => e.point !== undefined)
-          .forEach(entity => {
-            viewer.entities.remove(entity)
-          });
-
-
-        // Remove ref for the temporary line (we just published points we're keeping)
-        viewer.entities.remove(activeShapeRef.current);
-
-        resetShapeEntityAndPoints();
-      };
-
-      const originalTerminateLine = (event: ScreenSpaceEventHandler.PositionedEvent) => {
-        // We pop() to remove the latest floatingPoint (if we're adding it)
+      const commitCurrentLine = (event: ScreenSpaceEventHandler.PositionedEvent) => {
+        // To undo the last point of contact for the line when RightClicked
         activeShapePointsRef.current.pop();
-
-        // Using Cartesian[] re-Draw after the latest pop()
-        addLineEntity(viewer, new CallbackProperty(() => activeShapePointsRef.current, false));
-
-        // Remove last Entity from viewer ??? Why remove our shape ???
-        viewer.entities.remove(activeShapeRef.current);
-
+        // Create independent var to persist shape points (outside of local ref)
+        const committedPoints = [...activeShapePointsRef.current];
+        // Persist our current line via our independent var (before resetting ref)
+        drawLine(viewer, committedPoints);
+        // Points are here only to show user what is not yet committed
+        removePoints(viewer);
+        // Cleanup
+        resetShapeEntityAndPoints();
+      };
+      
+      const deleteCurrentLine = (event: ScreenSpaceEventHandler.PositionedEvent) => {
+        removePoints(viewer);
         resetShapeEntityAndPoints();
       };
 
-      // terminate - what do we want to do
-      // Allow only 1 line, so we remove everything and start again
-      // Make an additional line ??? We need more storage to preserve the 1st line and one for the next
-      viewer.screenSpaceEventHandler.setInputAction(
-        // deleteLine
-        commitLine
-        // originalTerminateLine
-        , ScreenSpaceEventType.RIGHT_CLICK);
+      // const deleteAllLines = (event: ScreenSpaceEventHandler.PositionedEvent) => {
+      //   viewer.entities.removeAll();
+      //   resetShapeEntityAndPoints();
+      // };
+
+      viewer.screenSpaceEventHandler
+        .setInputAction(updateFloatingPoint, ScreenSpaceEventType.MOUSE_MOVE);
+      viewer.screenSpaceEventHandler
+        .setInputAction(plotNewLineWithPoint, ScreenSpaceEventType.LEFT_CLICK);
+      viewer.screenSpaceEventHandler
+        .setInputAction(commitCurrentLine, ScreenSpaceEventType.RIGHT_CLICK);
+      viewer.screenSpaceEventHandler
+        .setInputAction(deleteCurrentLine, ScreenSpaceEventType.MIDDLE_CLICK);
     }
 
     return () => {
       if (viewer) {
+        removeEventListener();
+        viewer.screenSpaceEventHandler
+          .removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
+        viewer.screenSpaceEventHandler
+          .removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
+        viewer.screenSpaceEventHandler
+          .removeInputAction(ScreenSpaceEventType.RIGHT_CLICK);
+        viewer.screenSpaceEventHandler
+          .removeInputAction(ScreenSpaceEventType.MIDDLE_CLICK);
         viewer.destroy();
       }
     }
   }, []);
 
-  return (
-    <div>
+  const ui = () => (<div>
       <h2>{DrawOnWorldTerrain.name} example</h2>
       <div style={{
         display: 'flex',
@@ -248,8 +233,16 @@ const DrawOnWorldTerrain = () => {
         <p>Pitch: {worldLocationInfo.Pitch.toFixed(2)}°</p>
         <p>Roll: {worldLocationInfo.Roll.toFixed(2)}°</p>
       </div>
+    </div>);
+
+  return (
+    <>
+      {isLoading
+        ? <h1>loading...</h1>
+        : ui()
+      }
       <div id="cesiumContainer" />
-    </div>
+    </>
   )
 }
 
