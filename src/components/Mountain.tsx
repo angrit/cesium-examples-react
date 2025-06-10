@@ -8,13 +8,6 @@ const Mountain = () => {
   const LATITUDE = 14.90811;  // Centroid of your model
   const HEIGHT = 200;     // Approx height above terrain
 
-  // Ensure the Cesium Ion access token is set from environment variables
-  // This is necessary for accessing terrain and other Cesium Ion services
-  Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_ACCESS_TOKEN;
-  if (!Ion.defaultAccessToken) {
-    console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
-  }
-
   const addGltfAsTileset = (viewer: Viewer) => {
     const modelUrl = new URL('../assets/scene-gltf/lopburi-3d-scene2.gltf', import.meta.url).href;
     Cesium3DTileset.fromUrl(modelUrl)
@@ -39,8 +32,6 @@ const Mountain = () => {
           uri: modelUrl,
           minimumPixelSize: 128,
           maximumScale: 1000,
-          // minimumPixelSize: 4000,
-          // maximumScale: 5000,
           scale: 1.0
         }
       });
@@ -54,6 +45,13 @@ const Mountain = () => {
   }
 
   useEffect(() => {
+    // Ensure the Cesium Ion access token is set from environment variables
+    // This is necessary for accessing terrain and other Cesium Ion services
+    Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_ACCESS_TOKEN;
+    if (!Ion.defaultAccessToken) {
+      console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
+    }
+
     document.title = `${Mountain.name} - Lopburi`;
 
     const viewer = new Viewer('cesiumContainer', {
@@ -67,6 +65,7 @@ const Mountain = () => {
       if (viewer) viewer.destroy();
     }
   }, []);
+
   return (
     <div>
       <h2>{Mountain.name} example (an imported asset from gltf/glb) </h2>

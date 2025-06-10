@@ -6,13 +6,6 @@ import 'cesium/Build/Cesium/Widgets/InfoBox/InfoBox.css';
 import 'cesium/Build/Cesium/Widgets/InfoBox/InfoBoxDescription.css';
 
 const Building = () => {
-  // Ensure the Cesium Ion access token is set from environment variables
-  // This is necessary for accessing terrain and other Cesium Ion services
-  Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_ACCESS_TOKEN;
-  if (!Ion.defaultAccessToken) {
-    console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
-  }
-
   const createOsmBuildings = async (viewer: Viewer) => {
     console.log('>>> Creating OSM buildings...', viewer);
     // Add Cesium OSM Buildings, a global 3D buildings layer.
@@ -34,7 +27,15 @@ const Building = () => {
   }
 
   useEffect(() => {
+    // Ensure the Cesium Ion access token is set from environment variables
+    // This is necessary for accessing terrain and other Cesium Ion services
+    Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_ACCESS_TOKEN;
+    if (!Ion.defaultAccessToken) {
+      console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
+    }
+
     document.title = `${Building.name} - OSM Buildings Example`;
+
     const viewer = new Viewer('cesiumContainer', {
       terrain: Terrain.fromWorldTerrain(),
     });
@@ -43,6 +44,7 @@ const Building = () => {
 
     return () => { if (viewer) viewer.destroy(); }
   }, []);
+
   return (
     <div>
       <h2>{Building.name}s example (Examine the buildings)</h2>

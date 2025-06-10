@@ -40,15 +40,16 @@ const NavWorldTerrain = () => {
     Roll: lopburi.Roll,
   });
 
-  // Ensure the Cesium Ion access token is set from environment variables
-  // This is necessary for accessing terrain and other Cesium Ion services
-  Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_ACCESS_TOKEN;
-  if (!Ion.defaultAccessToken) {
-    console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
-  }
-
   useEffect(() => {
+    // Ensure the Cesium Ion access token is set from environment variables
+    // This is necessary for accessing terrain and other Cesium Ion services
+    Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_ACCESS_TOKEN;
+    if (!Ion.defaultAccessToken) {
+      console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
+    }
+
     document.title = `${NavWorldTerrain.name} - Lopburi`;
+
     const viewer = new Viewer('cesiumContainer', {
       terrain: Terrain.fromWorldTerrain(),
     });
