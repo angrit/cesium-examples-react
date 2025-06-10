@@ -217,23 +217,11 @@ const DrawOnWorldTerrain = () => {
     }
   }, []);
 
-  const ui = () => (<div>
-      <h2>{DrawOnWorldTerrain.name} example</h2>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingInline: '1rem',
-        backgroundColor: '#f0f0f0',
-      }}>
-        <p>LONG: {worldLocationInfo.LONGITUDE.toFixed(6)}°</p>
-        <p>LAT: {worldLocationInfo.LATITUDE.toFixed(6)}°</p>
-        <p>HEIGHT: {worldLocationInfo.HEIGHT}m</p>
-        <p>Heading: {worldLocationInfo.Heading.toFixed(2)}°</p>
-        <p>Pitch: {worldLocationInfo.Pitch.toFixed(2)}°</p>
-        <p>Roll: {worldLocationInfo.Roll.toFixed(2)}°</p>
-      </div>
-    </div>);
+  const ui = () => (
+    <div>
+      <h2>{DrawOnWorldTerrain.name} 3D Line (LEFT = Make point, RIGHT = Commit line)</h2>
+    </div>
+  );
 
   return (
     <>

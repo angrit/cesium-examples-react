@@ -45,7 +45,7 @@ const Building = () => {
   }, []);
   return (
     <div>
-      <h2>{Building.name}s example</h2>
+      <h2>{Building.name}s example (Examine the buildings)</h2>
       <div id="cesiumContainer" />
     </div>
   )

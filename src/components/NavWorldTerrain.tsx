@@ -97,7 +97,7 @@ const NavWorldTerrain = () => {
 
   return (
     <div>
-      <h2>{NavWorldTerrain.name} example</h2>
+      <h2>{NavWorldTerrain.name} example (Move around the map, updated coords)</h2>
       <div style={{
         display: 'flex',
         flexDirection: 'row',
