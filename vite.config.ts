@@ -6,6 +6,7 @@ import cesium from 'vite-plugin-cesium'
 export default defineConfig({
   base: '/cesium-examples-react/',
   plugins: [react(), cesium({
+    rebuildCesium: true, // Rebuild Cesium for copy to output folder
     cesiumBuildRootPath: '/cesium-examples-react/cesium'
   })],
   build: {
