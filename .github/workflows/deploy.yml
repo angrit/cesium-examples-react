@@ -1,0 +1,70 @@
+name: Deploy Cesium React to GitHub Pages
+
+on:
+  push:
+    branches: [ '*' ]  # or your default branch name
+
+permissions:
+  contents: write
+  pages: write    # to deploy to Pages
+  id-token: write # to verify the deployment originates from an appropriate source
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '22.x'
+      #     cache: 'npm'
+
+      # - name: Clean install dependencies
+      #   run: npm ci
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'pnpm'
+
+      - name: Clean install dependencies
+        run: pnpm install
+        
+      - name: Build and import secrets
+        run: pnpm run build  # npm run build
+        env:
+          VITE_CESIUM_ION_ACCESS_TOKEN: ${{ secrets.VITE_CESIUM_ION_ACCESS_TOKEN }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Github Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # - name: Deploy
+      #   uses: JamesIves/github-pages-deploy-action@v4
+      #   with:
+      #     folder: dist
+      #     branch: gh-pages
