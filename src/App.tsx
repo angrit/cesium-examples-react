@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import Building from './components/Building'
 import Mountain from './components/Mountain'
 import NavWorldTerrain from './components/NavWorldTerrain'

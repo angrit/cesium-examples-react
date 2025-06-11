@@ -13,14 +13,14 @@ interface WorldLocationInfo {
   Roll: number;
 }
 
-const lopburiInteresting: WorldLocationInfo = {
-  LONGITUDE: 100.731303,  // Centroid of your model
-  LATITUDE: 14.930298,    // Centroid of your model
-  HEIGHT: 293,            // Approx height above terrain (units assumed to be meters)
-  Heading: 329.45,        // Camera heading in degrees
-  Pitch: -13.90,          // Camera pitch in degrees
-  Roll: 360.0,            // Camera roll in degrees
-}
+// const lopburiInteresting: WorldLocationInfo = {
+//   LONGITUDE: 100.731303,  // Centroid of your model
+//   LATITUDE: 14.930298,    // Centroid of your model
+//   HEIGHT: 293,            // Approx height above terrain (units assumed to be meters)
+//   Heading: 329.45,        // Camera heading in degrees
+//   Pitch: -13.90,          // Camera pitch in degrees
+//   Roll: 360.0,            // Camera roll in degrees
+// }
 const lopburi: WorldLocationInfo = {
   LONGITUDE: 100.684488,  // Centroid of your model
   LATITUDE: 14.973118,    // Centroid of your model

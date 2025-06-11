@@ -1,4 +1,3 @@
-// import React from 'react'
 import { useEffect } from 'react'
 import { Cartesian3, createOsmBuildingsAsync, Ion, Math as CesiumMath, Terrain, Viewer } from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';

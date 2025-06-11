@@ -21,14 +21,14 @@ interface WorldLocationInfo {
   Roll: number;
 }
 
-const lopburiInteresting: WorldLocationInfo = {
-  LONGITUDE: 100.731303,  // Centroid of your model
-  LATITUDE: 14.930298,    // Centroid of your model
-  HEIGHT: 293,            // Approx height above terrain (units assumed to be meters)
-  Heading: 329.45,        // Camera heading in degrees
-  Pitch: -13.90,          // Camera pitch in degrees
-  Roll: 360.0,            // Camera roll in degrees
-}
+// const lopburiInteresting: WorldLocationInfo = {
+//   LONGITUDE: 100.731303,  // Centroid of your model
+//   LATITUDE: 14.930298,    // Centroid of your model
+//   HEIGHT: 293,            // Approx height above terrain (units assumed to be meters)
+//   Heading: 329.45,        // Camera heading in degrees
+//   Pitch: -13.90,          // Camera pitch in degrees
+//   Roll: 360.0,            // Camera roll in degrees
+// }
 const lopburi: WorldLocationInfo = {
   LONGITUDE: 100.684488,  // Centroid of your model
   LATITUDE: 14.973118,    // Centroid of your model
@@ -39,14 +39,14 @@ const lopburi: WorldLocationInfo = {
 };
 
 const DrawOnWorldTerrain = () => {
-  const [worldLocationInfo, setWorldLocationInfo] = useState<WorldLocationInfo>({
+  const worldLocationInfo: WorldLocationInfo = {
     LONGITUDE: lopburi.LONGITUDE,
     LATITUDE: lopburi.LATITUDE,
     HEIGHT: lopburi.HEIGHT,
     Heading: lopburi.Heading,
     Pitch: lopburi.Pitch,
     Roll: lopburi.Roll,
-  });
+  };
   
   const [isLoading, setIsLoading] = useState(true);
   const activeShapePointsRef = useRef<Cartesian3[]>([]);
@@ -168,7 +168,8 @@ const DrawOnWorldTerrain = () => {
         activeShapePointsRef.current.length = 0;
       };
 
-      const commitCurrentLine = (event: ScreenSpaceEventHandler.PositionedEvent) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const commitCurrentLine = (_event: ScreenSpaceEventHandler.PositionedEvent) => {
         // To undo the last point of contact for the line when RightClicked
         activeShapePointsRef.current.pop();
         // Create independent var to persist shape points (outside of local ref)
@@ -181,7 +182,8 @@ const DrawOnWorldTerrain = () => {
         resetShapeEntityAndPoints();
       };
       
-      const deleteCurrentLine = (event: ScreenSpaceEventHandler.PositionedEvent) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const deleteCurrentLine = (_event: ScreenSpaceEventHandler.PositionedEvent) => {
         removePoints(viewer);
         resetShapeEntityAndPoints();
       };
@@ -215,6 +217,7 @@ const DrawOnWorldTerrain = () => {
         viewer.destroy();
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const ui = () => (
