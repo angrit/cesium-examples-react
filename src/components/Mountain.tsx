@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Cartesian3, Ion, Terrain, Viewer, /*Cesium3DTileset*/ } from 'cesium';
-import 'cesium/Build/Cesium/Widgets/widgets.css';
+// import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 const Mountain = () => {
   const LONGITUDE = 100.71197; // Centroid of your model

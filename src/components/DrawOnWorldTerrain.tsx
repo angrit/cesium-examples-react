@@ -5,7 +5,7 @@ import {
   Color, HeightReference, CallbackProperty, 
   Entity, PositionProperty, ConstantPositionProperty,
 } from 'cesium';
-import 'cesium/Build/Cesium/Widgets/widgets.css';
+// import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 // https://sandcastle.cesium.com/?src=Drawing%20on%20Terrain.html
 // https://cesium.com/learn/cesiumjs/ref-doc/Entity.html

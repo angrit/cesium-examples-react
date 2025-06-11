@@ -3,7 +3,7 @@ import Building from './components/Building'
 import Mountain from './components/Mountain'
 import NavWorldTerrain from './components/NavWorldTerrain'
 import DrawOnWorldTerrain from './components/DrawOnWorldTerrain'
-import 'cesium/Build/Cesium/Widgets/widgets.css'
+// import 'cesium/Build/Cesium/Widgets/widgets.css'
 
 function App() {
   const MapExamples = {

@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { Cartesian3, createOsmBuildingsAsync, Ion, Math as CesiumMath, Terrain, Viewer } from 'cesium';
-import 'cesium/Build/Cesium/Widgets/widgets.css';
-import 'cesium/Build/Cesium/Widgets/InfoBox/InfoBox.css';
-import 'cesium/Build/Cesium/Widgets/InfoBox/InfoBoxDescription.css';
+// import 'cesium/Build/Cesium/Widgets/widgets.css';
+// import 'cesium/Build/Cesium/Widgets/InfoBox/InfoBox.css';
+// import 'cesium/Build/Cesium/Widgets/InfoBox/InfoBoxDescription.css';
 
 const Building = () => {
   const createOsmBuildings = async (viewer: Viewer) => {

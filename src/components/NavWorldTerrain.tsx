@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Ion, Terrain, Viewer, Math as CesiumMath, Cartesian3 } from 'cesium';
-import 'cesium/Build/Cesium/Widgets/widgets.css';
+// import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 // https://cesium.com/learn/cesiumjs-learn/cesiumjs-terrain/#quickstart
 
