@@ -3,6 +3,8 @@ name: Deploy Cesium React to GitHub Pages
 on:
   push:
     branches: [ '*' ]  # or your default branch name
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 permissions:
   contents: write
