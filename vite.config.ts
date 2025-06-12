@@ -11,7 +11,7 @@ export default defineConfig({
 
   })],
   build: {
-    outDir: 'dist/cesium-examples-react',
+    outDir: 'dist',
     emptyOutDir: true,
     commonjsOptions: {
       // Ensure CommonJs modules are properly handled
