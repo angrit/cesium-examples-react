@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "postbuild": "mv -v dist/cesium-examples-react/cesium dist && rm -rv dist/cesium-examples-react && tree -L 2 dist",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "pnpm run build"
   },
   "dependencies": {
     "cesium": "^1.130.0",

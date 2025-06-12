@@ -1,21 +1,19 @@
-// import React from 'react'
 import { useEffect } from 'react'
-import { Cartesian3, Ion, Terrain, Viewer, Cesium3DTileset } from 'cesium';
-import 'cesium/Build/Cesium/Widgets/widgets.css';
+import { Cartesian3, Ion, Terrain, Viewer, /*Cesium3DTileset*/ } from 'cesium';
 
 const Mountain = () => {
   const LONGITUDE = 100.71197; // Centroid of your model
   const LATITUDE = 14.90811;  // Centroid of your model
   const HEIGHT = 200;     // Approx height above terrain
 
-  const addGltfAsTileset = (viewer: Viewer) => {
-    const modelUrl = new URL('../assets/scene-gltf/lopburi-3d-scene2.gltf', import.meta.url).href;
-    Cesium3DTileset.fromUrl(modelUrl)
-      .then((tileset) => {
-        viewer.scene.primitives.add(tileset);
-        viewer.flyTo(tileset);
-      });
-  }
+  // const addGltfAsTileset = (viewer: Viewer) => {
+  //   const modelUrl = new URL('../assets/scene-gltf/lopburi-3d-scene2.gltf', import.meta.url).href;
+  //   Cesium3DTileset.fromUrl(modelUrl)
+  //     .then((tileset) => {
+  //       viewer.scene.primitives.add(tileset);
+  //       viewer.flyTo(tileset);
+  //     });
+  // }
 
   const add3dAssetAsEntity = (viewer: Viewer) => {
     const modelUrl = new URL('../assets/scene-gltf/lopburi-3d-scene2.glb', import.meta.url).href;
@@ -52,7 +50,7 @@ const Mountain = () => {
       console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
     }
 
-    document.title = `${Mountain.name} - Lopburi`;
+    document.title = `${Mountain.displayName} - Lopburi`;
 
     const viewer = new Viewer('cesiumContainer', {
       terrain: Terrain.fromWorldTerrain(),
@@ -73,5 +71,7 @@ const Mountain = () => {
     </div>
   )
 }
+
+Mountain.displayName = "Mountain";
 
 export default Mountain

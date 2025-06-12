@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Ion, Terrain, Viewer, Math as CesiumMath, Cartesian3 } from 'cesium';
-import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 // https://cesium.com/learn/cesiumjs-learn/cesiumjs-terrain/#quickstart
 
@@ -13,14 +12,14 @@ interface WorldLocationInfo {
   Roll: number;
 }
 
-const lopburiInteresting: WorldLocationInfo = {
-  LONGITUDE: 100.731303,  // Centroid of your model
-  LATITUDE: 14.930298,    // Centroid of your model
-  HEIGHT: 293,            // Approx height above terrain (units assumed to be meters)
-  Heading: 329.45,        // Camera heading in degrees
-  Pitch: -13.90,          // Camera pitch in degrees
-  Roll: 360.0,            // Camera roll in degrees
-}
+// const lopburiInteresting: WorldLocationInfo = {
+//   LONGITUDE: 100.731303,  // Centroid of your model
+//   LATITUDE: 14.930298,    // Centroid of your model
+//   HEIGHT: 293,            // Approx height above terrain (units assumed to be meters)
+//   Heading: 329.45,        // Camera heading in degrees
+//   Pitch: -13.90,          // Camera pitch in degrees
+//   Roll: 360.0,            // Camera roll in degrees
+// }
 const lopburi: WorldLocationInfo = {
   LONGITUDE: 100.684488,  // Centroid of your model
   LATITUDE: 14.973118,    // Centroid of your model
@@ -48,7 +47,7 @@ const NavWorldTerrain = () => {
       console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
     }
 
-    document.title = `${NavWorldTerrain.name} - Lopburi`;
+    document.title = `${NavWorldTerrain.displayName} - Lopburi`;
 
     const viewer = new Viewer('cesiumContainer', {
       terrain: Terrain.fromWorldTerrain(),
@@ -98,7 +97,7 @@ const NavWorldTerrain = () => {
 
   return (
     <div>
-      <h2>{NavWorldTerrain.name} example (Move around the map, updated coords)</h2>
+      <h2>{NavWorldTerrain.displayName} example (Move around the map, updated coords)</h2>
       <div style={{
         display: 'flex',
         flexDirection: 'row',
@@ -117,5 +116,7 @@ const NavWorldTerrain = () => {
     </div>
   )
 }
+
+NavWorldTerrain.displayName = "Nav World Terrain";
 
 export default NavWorldTerrain
