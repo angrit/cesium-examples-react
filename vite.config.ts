@@ -4,15 +4,15 @@ import cesium from 'vite-plugin-cesium'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // base: '/cesium-examples-react/',
-  // base: './', // Use relative paths for assets
+  base: '/cesium-examples-react/',
   plugins: [react(), cesium({
-    // rebuildCesium: true, // Rebuild Cesium for copy to output folder
-    // cesiumBuildRootPath: './cesium',
-    // cesiumBuildPath: 'node_modules/cesium/Build',
-    // cesiumBuildRootPath: '/cesium-examples-react/cesium'
+    rebuildCesium: false,
+    cesiumBuildPath: 'node_modules/cesium/Build/Cesium',
+
   })],
   build: {
+    outDir: 'dist/cesium-examples-react',
+    emptyOutDir: true,
     commonjsOptions: {
       // Ensure CommonJs modules are properly handled
       transformMixedEsModules: true,

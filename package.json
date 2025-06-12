@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "postbuild": "mv -v dist/cesium-examples-react/cesium-examples-react/cesium dist/cesium-examples-react && rm -rv dist/cesium-examples-react/cesium-examples-react && tree -L 3 dist",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "pnpm run build"
