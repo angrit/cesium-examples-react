@@ -1,8 +1,5 @@
 import { useEffect } from 'react'
 import { Cartesian3, createOsmBuildingsAsync, Ion, Math as CesiumMath, Terrain, Viewer } from 'cesium';
-// import 'cesium/Build/Cesium/Widgets/widgets.css';
-// import 'cesium/Build/Cesium/Widgets/InfoBox/InfoBox.css';
-// import 'cesium/Build/Cesium/Widgets/InfoBox/InfoBoxDescription.css';
 
 const Building = () => {
   const createOsmBuildings = async (viewer: Viewer) => {
@@ -33,7 +30,7 @@ const Building = () => {
       console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
     }
 
-    document.title = `${Building.name} - OSM Buildings Example`;
+    document.title = `${Building.displayName} - OSM Buildings Example`;
 
     const viewer = new Viewer('cesiumContainer', {
       terrain: Terrain.fromWorldTerrain(),
@@ -46,10 +43,12 @@ const Building = () => {
 
   return (
     <div>
-      <h2>{Building.name}s example (Examine the buildings)</h2>
+      <h2>{Building.displayName}s example (Examine the buildings)</h2>
       <div id="cesiumContainer" />
     </div>
   )
 }
+
+Building.displayName = "Building";
 
 export default Building

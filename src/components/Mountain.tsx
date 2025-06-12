@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { Cartesian3, Ion, Terrain, Viewer, /*Cesium3DTileset*/ } from 'cesium';
-// import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 const Mountain = () => {
   const LONGITUDE = 100.71197; // Centroid of your model
@@ -51,7 +50,7 @@ const Mountain = () => {
       console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
     }
 
-    document.title = `${Mountain.name} - Lopburi`;
+    document.title = `${Mountain.displayName} - Lopburi`;
 
     const viewer = new Viewer('cesiumContainer', {
       terrain: Terrain.fromWorldTerrain(),
@@ -72,5 +71,7 @@ const Mountain = () => {
     </div>
   )
 }
+
+Mountain.displayName = "Mountain";
 
 export default Mountain

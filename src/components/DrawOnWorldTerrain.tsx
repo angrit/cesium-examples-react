@@ -5,7 +5,6 @@ import {
   Color, HeightReference, CallbackProperty, 
   Entity, PositionProperty, ConstantPositionProperty,
 } from 'cesium';
-// import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 // https://sandcastle.cesium.com/?src=Drawing%20on%20Terrain.html
 // https://cesium.com/learn/cesiumjs/ref-doc/Entity.html
@@ -92,7 +91,7 @@ const DrawOnWorldTerrain = () => {
       console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
     }
 
-    document.title = `${DrawOnWorldTerrain.name} - Lopburi`;
+    document.title = `${DrawOnWorldTerrain.displayName} - Lopburi`;
     const viewer = new Viewer('cesiumContainer', {
       terrain: Terrain.fromWorldTerrain(),
     });
@@ -222,7 +221,7 @@ const DrawOnWorldTerrain = () => {
 
   const ui = () => (
     <div>
-      <h2>{DrawOnWorldTerrain.name} 3D Line (LEFT = Make point, RIGHT = Commit line)</h2>
+      <h2>{DrawOnWorldTerrain.displayName} 3D Line (LEFT = Make point, RIGHT = Commit line)</h2>
     </div>
   );
 
@@ -236,5 +235,7 @@ const DrawOnWorldTerrain = () => {
     </>
   )
 }
+
+DrawOnWorldTerrain.displayName = "Draw on Terrain";
 
 export default DrawOnWorldTerrain

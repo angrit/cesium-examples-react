@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Ion, Terrain, Viewer, Math as CesiumMath, Cartesian3 } from 'cesium';
-// import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 // https://cesium.com/learn/cesiumjs-learn/cesiumjs-terrain/#quickstart
 
@@ -48,7 +47,7 @@ const NavWorldTerrain = () => {
       console.error('>>> Cesium Ion access token is not set. Please set the VITE_CESIUM_ION_ACCESS_TOKEN environment variable.');
     }
 
-    document.title = `${NavWorldTerrain.name} - Lopburi`;
+    document.title = `${NavWorldTerrain.displayName} - Lopburi`;
 
     const viewer = new Viewer('cesiumContainer', {
       terrain: Terrain.fromWorldTerrain(),
@@ -98,7 +97,7 @@ const NavWorldTerrain = () => {
 
   return (
     <div>
-      <h2>{NavWorldTerrain.name} example (Move around the map, updated coords)</h2>
+      <h2>{NavWorldTerrain.displayName} example (Move around the map, updated coords)</h2>
       <div style={{
         display: 'flex',
         flexDirection: 'row',
@@ -117,5 +116,7 @@ const NavWorldTerrain = () => {
     </div>
   )
 }
+
+NavWorldTerrain.displayName = "Nav World Terrain";
 
 export default NavWorldTerrain
